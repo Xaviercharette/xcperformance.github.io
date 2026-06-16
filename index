@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>XC Performance — Coaching & Massothérapie</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:     #1a8cff;
+      --blue-glow:#3ab0ff;
+      --dark:     #0a0d12;
+      --dark2:    #0f1318;
+      --card:     #131820;
+      --border:   rgba(26,140,255,0.18);
+      --text:     #c8d8f0;
+      --muted:    #7a90ae;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--dark);
+      color: var(--text);
+      font-family: 'Barlow', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%;
+      height: 70px;
+      background: rgba(10,13,18,0);
+      backdrop-filter: blur(0px);
+      border-bottom: 1px solid transparent;
+      transition: background 0.4s, border-color 0.4s, backdrop-filter 0.4s;
+    }
+    nav.scrolled {
+      background: rgba(10,13,18,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Logo nav — caché au départ, visible après scroll */
+    .nav-logo {
+      opacity: 0; transform: scale(0.7);
+      transition: opacity 0.4s, transform 0.4s;
+    }
+    nav.scrolled .nav-logo {
+      opacity: 1; transform: scale(1);
+    }
+    .nav-logo img { height: 36px; }
+
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none;
+      font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase;
+      font-weight: 500; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--blue-glow); }
+    .nav-cta {
+      background: var(--blue); color: #fff; border: none;
+      padding: 0.5rem 1.4rem; border-radius: 4px;
+      font-family: 'Barlow', sans-serif; font-size: 0.85rem;
+      font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+      cursor: pointer; text-decoration: none; transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--blue-glow); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 60px 5%;
+      position: relative;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 55%, rgba(26,140,255,0.10) 0%, transparent 70%),
+        var(--dark);
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(26,140,255,0.03) 60px, rgba(26,140,255,0.03) 61px),
+        repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(26,140,255,0.03) 60px, rgba(26,140,255,0.03) 61px);
+      pointer-events: none;
+    }
+
+    /* Logo hero — grand au départ */
+    .hero-logo {
+      width: min(480px, 80vw);
+      margin-bottom: 2.5rem;
+      filter: drop-shadow(0 0 40px rgba(26,140,255,0.55));
+      transition: all 0.4s ease;
+      position: relative; z-index: 1;
+    }
+
+    .hero-tagline {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.6rem);
+      font-weight: 800; letter-spacing: 0.04em;
+      text-transform: uppercase; color: #fff;
+      line-height: 1.1; margin-bottom: 1.2rem;
+    }
+    .hero-tagline span { color: var(--blue); }
+    .hero-sub {
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      color: var(--muted); max-width: 500px;
+      margin: 0 auto 2.5rem;
+    }
+    .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--blue); color: #fff;
+      padding: 0.85rem 2.2rem; border-radius: 4px;
+      text-decoration: none; font-weight: 600;
+      font-size: 0.95rem; letter-spacing: 0.06em; text-transform: uppercase;
+      transition: background 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 24px rgba(26,140,255,0.35);
+    }
+    .btn-primary:hover { background: var(--blue-glow); box-shadow: 0 0 36px rgba(26,140,255,0.55); }
+    .btn-outline {
+      border: 1px solid var(--border); color: var(--text);
+      padding: 0.85rem 2.2rem; border-radius: 4px;
+      text-decoration: none; font-weight: 500;
+      font-size: 0.95rem; letter-spacing: 0.06em; text-transform: uppercase;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-outline:hover { border-color: var(--blue); color: var(--blue-glow); }
+
+    /* ── SECTIONS ── */
+    section { padding: 90px 5%; }
+    .section-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--blue); margin-bottom: 0.7rem;
+    }
+    .section-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.03em; color: #fff;
+      margin-bottom: 1rem; line-height: 1.1;
+    }
+    .section-intro { color: var(--muted); max-width: 560px; font-size: 1rem; }
+
+    /* ── SERVICES ── */
+    #services { background: var(--dark2); }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem; margin-top: 3rem;
+    }
+    .service-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 8px; padding: 2rem;
+      transition: border-color 0.25s, transform 0.25s;
+      position: relative; overflow: hidden;
+    }
+    .service-card::before {
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--blue), transparent);
+      opacity: 0; transition: opacity 0.25s;
+    }
+    .service-card:hover { border-color: rgba(26,140,255,0.45); transform: translateY(-4px); }
+    .service-card:hover::before { opacity: 1; }
+    .service-icon { font-size: 2rem; margin-bottom: 1rem; display: block; }
+    .service-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.25rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.05em;
+      color: #fff; margin-bottom: 0.5rem;
+    }
+    .service-duration {
+      font-size: 0.8rem; color: var(--blue);
+      font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; margin-bottom: 0.8rem;
+    }
+    .service-desc { font-size: 0.92rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── ABOUT ── */
+    #about { background: var(--dark); }
+    .about-inner {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 4rem; align-items: center; max-width: 1000px; margin: 0 auto;
+    }
+    .about-visual { display: flex; align-items: center; justify-content: center; }
+    .about-logo-wrap {
+      width: 220px; height: 220px; border-radius: 50%;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      background: var(--card);
+      box-shadow: 0 0 60px rgba(26,140,255,0.12);
+    }
+    .about-logo-wrap img { width: 140px; }
+    .about-text .section-intro { max-width: 100%; margin-bottom: 1.5rem; }
+    .stats { display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap; }
+    .stat-num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2.2rem; font-weight: 800;
+      color: var(--blue); line-height: 1;
+    }
+    .stat-label { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.2rem; }
+
+    /* ── BOOKING ── */
+    #booking { background: var(--dark2); text-align: center; }
+    .booking-inner { max-width: 600px; margin: 0 auto; }
+    .booking-inner .section-intro { margin: 0 auto 2.5rem; }
+    .booking-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 8px; padding: 2.5rem; margin-bottom: 1.5rem;
+    }
+    .booking-card p { color: var(--muted); margin-bottom: 1.5rem; font-size: 0.95rem; }
+
+    /* ── CONTACT ── */
+    #contact { background: var(--dark); text-align: center; }
+    .contact-inner { max-width: 560px; margin: 0 auto; }
+    .contact-inner .section-intro { margin: 0 auto 2rem; }
+    .contact-email {
+      display: inline-block; color: var(--blue-glow); font-size: 1.1rem;
+      text-decoration: none; font-weight: 500;
+      border-bottom: 1px solid rgba(26,140,255,0.3);
+      padding-bottom: 2px; transition: color 0.2s, border-color 0.2s;
+      margin-bottom: 2.5rem;
+    }
+    .contact-email:hover { color: #fff; border-color: #fff; }
+
+    .social-links {
+      display: flex; align-items: center; justify-content: center;
+      gap: 1.2rem; margin-top: 2rem;
+    }
+    .social-link {
+      display: flex; align-items: center; gap: 0.65rem;
+      color: #fff; text-decoration: none;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 6px; padding: 0.65rem 1.2rem;
+      font-size: 0.9rem; font-weight: 500; letter-spacing: 0.04em;
+      transition: border-color 0.2s, background 0.2s, transform 0.2s;
+    }
+    .social-link:hover {
+      border-color: rgba(26,140,255,0.5);
+      background: rgba(26,140,255,0.08);
+      transform: translateY(-2px);
+    }
+    .social-link svg { width: 20px; height: 20px; fill: #fff; flex-shrink: 0; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 5%;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem; background: var(--dark);
+    }
+    footer img { height: 28px; opacity: 0.6; }
+    footer p { font-size: 0.8rem; color: var(--muted); }
+    .footer-social { display: flex; gap: 1rem; }
+    .footer-social a {
+      display: flex; align-items: center; justify-content: center;
+      width: 34px; height: 34px;
+      border: 1px solid var(--border); border-radius: 50%;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .footer-social a:hover { border-color: var(--blue); background: rgba(26,140,255,0.1); }
+    .footer-social svg { width: 16px; height: 16px; fill: #fff; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      .nav-links { display: none; }
+      .about-inner { grid-template-columns: 1fr; gap: 2rem; }
+      .about-visual { display: none; }
+      .social-links { flex-direction: column; align-items: stretch; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-logo { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-logo">
+    <img src="Logo_XCperformance.png" alt="XC Performance" />
+  </div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#about">À propos</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#booking" class="nav-cta">Réserver</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <img src="Logo_XCperformance.png" alt="XC Performance" class="hero-logo" id="heroLogo" />
+  <h1 class="hero-tagline">Atteins ton<br><span>plein potentiel</span></h1>
+  <p class="hero-sub">Coaching personnalisé et massothérapie sportive pour repousser vos limites et optimiser votre récupération.</p>
+  <div class="hero-btns">
+    <a href="#booking" class="btn-primary">Prendre rendez-vous</a>
+    <a href="#services" class="btn-outline">Voir les services</a>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-label">Ce que j'offre</div>
+  <h2 class="section-title">Services</h2>
+  <p class="section-intro">Des séances adaptées à vos besoins, que ce soit pour performer, récupérer ou planifier votre progression.</p>
+  <div class="services-grid">
+    <div class="service-card">
+      <span class="service-icon">🏋️</span>
+      <div class="service-name">Entraînement privé</div>
+      <div class="service-duration">60 min</div>
+      <p class="service-desc">Séance d'entraînement sur mesure en présentiel. Programme adapté à vos objectifs et votre niveau pour maximiser vos résultats.</p>
+    </div>
+    <div class="service-card">
+      <span class="service-icon">💆</span>
+      <div class="service-name">Massage sportif</div>
+      <div class="service-duration">60 · 90 · 120 min</div>
+      <p class="service-desc">Traitement ciblé des tensions musculaires pour favoriser la récupération, réduire les douleurs et améliorer la mobilité.</p>
+    </div>
+    <div class="service-card">
+      <span class="service-icon">💻</span>
+      <div class="service-name">Rencontre à distance</div>
+      <div class="service-duration">30 min</div>
+      <p class="service-desc">Consultation en ligne pour planification, suivi de programme, ou coaching de performance — où que vous soyez.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-inner">
+    <div class="about-visual">
+      <div class="about-logo-wrap">
+        <img src="Logo_XCperformance.png" alt="XC Performance" />
+      </div>
+    </div>
+    <div class="about-text">
+      <div class="section-label">À propos</div>
+      <h2 class="section-title">Xavier Charette</h2>
+      <p class="section-intro">Passionné par la performance humaine, je combine expertise en entraînement et en massothérapie pour vous offrir une approche complète — du mouvement à la récupération.</p>
+      <p class="section-intro" style="margin-top:0.8rem;">Chaque client est unique. Mes programmes sont conçus autour de vos objectifs, votre corps et votre rythme de vie.</p>
+      <div class="stats">
+        <div>
+          <div class="stat-num">3</div>
+          <div class="stat-label">Services offerts</div>
+        </div>
+        <div>
+          <div class="stat-num">100%</div>
+          <div class="stat-label">Personnalisé</div>
+        </div>
+        <div>
+          <div class="stat-num">En ligne</div>
+          <div class="stat-label">& en personne</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section id="booking">
+  <div class="booking-inner">
+    <div class="section-label">Prêt à commencer ?</div>
+    <h2 class="section-title">Réserver une séance</h2>
+    <p class="section-intro">Choisissez votre service et votre disponibilité directement en ligne. Confirmation automatique par courriel.</p>
+    <div class="booking-card">
+      <p>Cliquez ci-dessous pour accéder au calendrier et réserver votre séance en quelques secondes.</p>
+      <a href="mailto:xc.performance@outlook.com" class="btn-primary">Réserver maintenant</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="section-label">On se parle ?</div>
+    <h2 class="section-title">Contact</h2>
+    <p class="section-intro">Pour toute question, écrivez-moi par courriel ou retrouvez-moi sur les réseaux sociaux.</p>
+    <a href="mailto:xc.performance@outlook.com" class="contact-email">xc.performance@outlook.com</a>
+    <div class="social-links">
+      <a href="https://www.facebook.com/xc.performance" target="_blank" rel="noopener" class="social-link">
+        <svg viewBox="0 0 24 24"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+        xc.performance
+      </a>
+      <a href="https://www.instagram.com/xc.performance" target="_blank" rel="noopener" class="social-link">
+        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        xc.performance
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <img src="Logo_XCperformance.png" alt="XC Performance" />
+  <p>© 2026 XC Performance · Tous droits réservés</p>
+  <div class="footer-social">
+    <a href="https://www.facebook.com/xc.performance" target="_blank" rel="noopener" aria-label="Facebook">
+      <svg viewBox="0 0 24 24"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+    </a>
+    <a href="https://www.instagram.com/xc.performance" target="_blank" rel="noopener" aria-label="Instagram">
+      <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+    </a>
+  </div>
+</footer>
+
+<script>
+  const navbar = document.getElementById('navbar');
+  const heroLogo = document.getElementById('heroLogo');
+  const hero = document.querySelector('.hero');
+
+  window.addEventListener('scroll', () => {
+    const heroBottom = hero.getBoundingClientRect().bottom;
+    const scrollY = window.scrollY;
+    const heroHeight = hero.offsetHeight;
+
+    if (scrollY > 80) {
+      navbar.classList.add('scrolled');
+    } else {
+      navbar.classList.remove('scrolled');
+    }
+
+    const progress = Math.min(scrollY / (heroHeight * 0.5), 1);
+    const scale = 1 - (progress * 0.35);
+    const opacity = 1 - (progress * 0.3);
+    heroLogo.style.transform = `scale(${scale})`;
+    heroLogo.style.opacity = opacity;
+  });
+</script>
+
+</body>
+</html>
